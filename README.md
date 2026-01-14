@@ -25,20 +25,6 @@ O projeto foi pensado para simular cenários reais enfrentados no dia a dia de a
 
 ---
 
-## 🧩 Arquitetura do Projeto
-
-automation
-│── src
-│ └── main
-│ └── java
-│ └── com.bringto.rpa
-│ ├── selenium
-│ │ └── DriverFactory.java
-│ └── Main.java
-│── pom.xml
-│── README.md
-
-
 ### 📂 Principais Componentes
 
 - **DriverFactory**  
