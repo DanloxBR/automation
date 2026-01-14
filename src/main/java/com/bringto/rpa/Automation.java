@@ -1,0 +1,68 @@
+package com.bringto.rpa;
+
+import com.bringto.rpa.selenium.DriverFactory;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
+
+public class Automation {
+
+    public static void main(String[] args) {
+        WebDriver driver = null;
+
+        try {
+            driver = DriverFactory.getDriver();
+            driver.get("https://the-internet.herokuapp.com/login");
+
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//h4")));
+
+            List<WebElement> letras = driver.findElements(By.xpath("//h4/em"));
+            List<String> texto = new ArrayList<>();
+            for (WebElement elemento : letras) {
+                texto.add(elemento.getText());
+            }
+
+            String login = texto.get(0);
+            String senha = texto.get(1);
+
+            System.out.println("Usuário: " + login);
+            System.out.println("Senha: " + senha);
+
+            WebElement inputLogin = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='username']")));
+            inputLogin.sendKeys(login);
+
+            WebElement inputSenha = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='password']")));
+            inputSenha.sendKeys(senha);
+
+            WebElement botaoLogin = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[@type='submit']")));
+            botaoLogin.click();
+
+            WebElement confirmar = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@id='flash']")));
+            String confirmacao = confirmar.getText();
+
+            if (confirmacao.contains("You logged into a secure area!")) {
+                System.out.println("You logged into a secure area!");
+            } else if (confirmacao.contains("Your username is invalid!")) {
+                System.out.println("Your username is invalid!");
+            } else if (confirmacao.contains("Your password is invalid!")) {
+                System.out.println("Your password is invalid!");
+            } else {
+                System.out.println("Erro, Mensagem: " + confirmacao);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            DriverFactory.quitDriver();
+        }
+    }
+}
+
